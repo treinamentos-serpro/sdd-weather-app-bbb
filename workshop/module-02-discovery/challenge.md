@@ -102,9 +102,9 @@ spec. Registre as decisões tomadas (e a justificativa):
 
 ## Checklist do módulo
 
-- [ ] `specs/discovery.md` criado
-- [ ] Funcional vs não-funcional separados corretamente
-- [ ] ≥ 6 perguntas em aberto com impacto
-- [ ] Tabela de riscos com mitigação
-- [ ] Personas definidas
-- [ ] Decisões registradas
+- [x] `specs/discovery.md` criado
+- [x] Funcional vs não-funcional separados corretamente
+- [x] ≥ 6 perguntas em aberto com impacto
+- [x] Tabela de riscos com mitigação
+- [x] Personas definidas
+- [x] Decisões registradas
