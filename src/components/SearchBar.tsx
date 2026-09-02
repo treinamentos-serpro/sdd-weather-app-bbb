@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { type FormEvent, useState } from 'react';
 
 interface SearchBarProps {
   onSearch: (city: string) => void;
@@ -11,6 +11,7 @@ export default function SearchBar({ onSearch, disabled }: SearchBarProps) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (disabled) return;
     const trimmed = value.trim();
     if (!trimmed) return;
     onSearch(trimmed);
@@ -32,6 +33,7 @@ export default function SearchBar({ onSearch, disabled }: SearchBarProps) {
           onChange={(e) => setValue(e.target.value)}
           placeholder="Buscar cidade…"
           autoComplete="off"
+          disabled={disabled}
           className="flex-1 bg-transparent text-white placeholder-white/40 outline-none"
         />
         <button

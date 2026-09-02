@@ -20,9 +20,9 @@ async function fetchWithTimeout(url: string): Promise<Response> {
     return await fetch(url, { signal: controller.signal });
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') {
-      throw new WeatherServiceError('A requisição demorou demais. Tente novamente.');
+      throw new WeatherServiceError('A requisição demorou demais.');
     }
-    throw new WeatherServiceError('Falha de rede. Verifique sua conexão.');
+    throw new WeatherServiceError('Falha de rede.');
   } finally {
     clearTimeout(timeout);
   }
@@ -96,13 +96,23 @@ function mapCurrent(c: NonNullable<ForecastResponse['current']>): CurrentWeather
 }
 
 function mapForecast(d: NonNullable<ForecastResponse['daily']>): ForecastDay[] {
-  return d.time.map((date, i) => ({
+  return d.time.slice(0, 5).map((date, i) => ({
     date,
     weatherCode: d.weather_code[i],
     max: d.temperature_2m_max[i],
     min: d.temperature_2m_min[i],
     precipitationProbability: d.precipitation_probability_max[i] ?? 0,
   }));
+}
+
+function hasCompleteForecast(d: NonNullable<ForecastResponse['daily']>): boolean {
+  return [
+    d.time,
+    d.weather_code,
+    d.temperature_2m_max,
+    d.temperature_2m_min,
+    d.precipitation_probability_max,
+  ].every((values) => Array.isArray(values) && values.length >= 5);
 }
 
 /**
@@ -115,8 +125,7 @@ export async function getWeather(city: City): Promise<WeatherData> {
     longitude: String(city.longitude),
     current:
       'temperature_2m,relative_humidity_2m,wind_speed_10m,surface_pressure,precipitation,weather_code',
-    daily:
-      'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+    daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
     forecast_days: '5',
     timezone: 'auto',
   });
@@ -127,7 +136,7 @@ export async function getWeather(city: City): Promise<WeatherData> {
   }
 
   const data = (await res.json()) as ForecastResponse;
-  if (!data.current || !data.daily) {
+  if (!data.current || !data.daily || !hasCompleteForecast(data.daily)) {
     throw new WeatherServiceError('Resposta de clima incompleta. Tente novamente.');
   }
 

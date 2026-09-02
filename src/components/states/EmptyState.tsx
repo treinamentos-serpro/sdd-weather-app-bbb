@@ -10,7 +10,7 @@ export default function EmptyState({ title, hint }: EmptyStateProps) {
       <span aria-hidden="true" className="text-4xl">
         🌍
       </span>
-      <p className="text-white/80">{title}</p>
+      <h2 className="text-white/80">{title}</h2>
       {hint && <p className="text-sm text-white/50">{hint}</p>}
     </div>
   );

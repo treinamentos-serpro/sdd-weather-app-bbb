@@ -1,7 +1,7 @@
-import type { ForecastDay, Unit } from '../types/weather';
-import { formatTemperature } from '../lib/temperature';
-import { getWeatherIcon, getWeatherLabel } from '../lib/weatherCodes';
 import { getDayLabel, getShortDate } from '../lib/format';
+import { formatTemperature, unitLabel } from '../lib/temperature';
+import { getWeatherIcon, getWeatherLabel } from '../lib/weatherCodes';
+import type { ForecastDay, Unit } from '../types/weather';
 
 interface ForecastCardProps {
   day: ForecastDay;
@@ -18,9 +18,16 @@ export default function ForecastCard({ day, index, unit }: ForecastCardProps) {
       <span aria-hidden="true" className="text-3xl" title={getWeatherLabel(day.weatherCode)}>
         {getWeatherIcon(day.weatherCode)}
       </span>
+      <span className="sr-only">{getWeatherLabel(day.weatherCode)}</span>
       <p className="text-sm">
-        <span className="font-semibold">{formatTemperature(day.max, unit)}</span>{' '}
-        <span className="text-white/50">{formatTemperature(day.min, unit)}</span>
+        <span className="font-semibold">
+          {formatTemperature(day.max, unit)}
+          {unitLabel(unit)}
+        </span>{' '}
+        <span className="text-white/50">
+          {formatTemperature(day.min, unit)}
+          {unitLabel(unit)}
+        </span>
       </p>
       <p className="text-xs text-accent-400">💧 {day.precipitationProbability}%</p>
     </li>

@@ -1,6 +1,6 @@
-import type { CurrentWeather as CurrentWeatherType, City, Unit } from '../types/weather';
-import { formatTemperature } from '../lib/temperature';
+import { formatTemperature, unitLabel } from '../lib/temperature';
 import { getWeatherIcon, getWeatherLabel } from '../lib/weatherCodes';
+import type { City, CurrentWeather as CurrentWeatherType, Unit } from '../types/weather';
 
 interface CurrentWeatherProps {
   city: City;
@@ -46,30 +46,21 @@ export default function CurrentWeather({ city, current, unit }: CurrentWeatherPr
             <span aria-hidden="true" className="text-6xl">
               {getWeatherIcon(current.weatherCode)}
             </span>
-            <span className="text-6xl font-light md:text-7xl">
+            <p className="text-6xl font-light md:text-7xl">
               {formatTemperature(current.temperature, unit)}
-            </span>
+              <span className="ml-1 text-3xl font-normal text-white/70 md:text-4xl">
+                {unitLabel(unit)}
+              </span>
+            </p>
           </div>
           <p className="mt-2 text-white/70">{getWeatherLabel(current.weatherCode)}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <Metric icon="💧" label="Umidade" value={`${Math.round(current.humidity)}%`} />
-          <Metric
-            icon="💨"
-            label="Vento"
-            value={`${Math.round(current.windSpeed)} km/h`}
-          />
-          <Metric
-            icon="🌧️"
-            label="Precipitação"
-            value={`${current.precipitation} mm`}
-          />
-          <Metric
-            icon="📊"
-            label="Pressão"
-            value={`${Math.round(current.pressure)} hPa`}
-          />
+          <Metric icon="💨" label="Vento" value={`${Math.round(current.windSpeed)} km/h`} />
+          <Metric icon="🌧️" label="Precipitação" value={`${current.precipitation} mm`} />
+          <Metric icon="📊" label="Pressão" value={`${Math.round(current.pressure)} hPa`} />
         </div>
       </div>
     </section>
